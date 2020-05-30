@@ -25,6 +25,9 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
+// For using google services
+apply plugin: 'com.google.gms.google-services'
+
 android {
     compileSdkVersion 28
 
@@ -38,15 +41,34 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "com.example.chatapp"
+        applicationId "com.example.flutter_chatapp"
         minSdkVersion 16
         targetSdkVersion 28
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
+
+        // Allow the number of method references in a .dex file to exceed 64K.
+        // For more details https://developer.android.com/tools/building/multidex.html
+        multiDexEnabled true
     }
 
     buildTypes {
         release {
+            // // Enables code shrinking, obfuscation, and optimization for only
+            // // your project's release build type.
+            // minifyEnabled true
+
+            // // Enables resource shrinking, which is performed by the
+            // // Android Gradle plugin.
+            // shrinkResources true
+
+            // // Includes the default ProGuard rules files that are packaged with
+            // // the Android Gradle plugin. To learn more, go to the section about
+            // // R8 configuration files.
+            // proguardFiles getDefaultProguardFile(
+            //         'proguard-android-optimize.txt'),
+            //         'proguard-rules.pro'
+
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig signingConfigs.debug
@@ -60,4 +82,7 @@ flutter {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+
+    // add the Firebase SDK for Google Analytics
+    implementation 'com.google.firebase:firebase-analytics:17.2.2'
 }
