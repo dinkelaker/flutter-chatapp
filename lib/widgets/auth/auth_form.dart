@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 class AuthForm extends StatefulWidget {
   AuthForm(this.submitFn);
 
-  final void Function(String email, String username, String password, bool isLogin) submitFn;
+  final void Function(String email, String username, String password,
+      bool isLogin, BuildContext ctxt) submitFn;
 
   @override
   _AuthFormState createState() => _AuthFormState();
@@ -20,13 +21,19 @@ class _AuthFormState extends State<AuthForm> {
 
   void _trySubmit() {
     final isValid = _formKey.currentState.validate();
-    
+
     //Close keyboard
     FocusScope.of(context).unfocus();
 
     if (isValid) {
       _formKey.currentState.save();
-      widget.submitFn(_userEmail, _userName, _userPassword, _isLogin);
+      widget.submitFn(
+        _userEmail.trim(),
+        _userName.trim(),
+        _userPassword.trim(),
+        _isLogin,
+        context,
+      );
     }
   }
 
@@ -58,21 +65,22 @@ class _AuthFormState extends State<AuthForm> {
                     _userEmail = value;
                   },
                 ),
-                if (!_isLogin) TextFormField(
-                  key: ValueKey('username'),
-                  decoration: InputDecoration(
-                    labelText: 'Username',
+                if (!_isLogin)
+                  TextFormField(
+                    key: ValueKey('username'),
+                    decoration: InputDecoration(
+                      labelText: 'Username',
+                    ),
+                    validator: (value) {
+                      if (value.length < 4) {
+                        return 'Please enter a username with at least 4 characters.';
+                      }
+                      return null;
+                    },
+                    onSaved: (value) {
+                      _userName = value;
+                    },
                   ),
-                  validator: (value) {
-                    if (value.length < 4 ) {
-                      return 'Please enter a username with at least 4 characters.';
-                    }
-                    return null;
-                  },
-                  onSaved: (value) {
-                    _userName = value;
-                  },
-                ),
                 TextFormField(
                   key: ValueKey('password'),
                   decoration: InputDecoration(
@@ -93,7 +101,7 @@ class _AuthFormState extends State<AuthForm> {
                   height: 12,
                 ),
                 RaisedButton(
-                  child: (_isLogin) ? Text('Login'): Text('Signup'),
+                  child: (_isLogin) ? Text('Login') : Text('Signup'),
                   onPressed: _trySubmit,
                 ),
                 FlatButton(
