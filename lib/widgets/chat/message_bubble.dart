@@ -2,10 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class MessageBubble extends StatelessWidget {
-  MessageBubble(this.message, this.userId, this.isCurrentUser, {this.key});
+  MessageBubble(this.message, this.username, this.isCurrentUser, {this.key});
 
   final String message;
-  final String userId;
+  final String username;
   final bool isCurrentUser;
   final Key key;
 
@@ -39,26 +39,20 @@ class MessageBubble extends StatelessWidget {
               horizontal: 8,
             ),
             child: Column(
-              crossAxisAlignment: isCurrentUser? CrossAxisAlignment.end :  CrossAxisAlignment.start,
+              crossAxisAlignment: isCurrentUser
+                  ? CrossAxisAlignment.end
+                  : CrossAxisAlignment.start,
               children: <Widget>[
-                FutureBuilder(
-                  future: Firestore.instance.collection('users').document(userId).get(),
-                  builder: (context, snapshot) {
-                    if(snapshot.connectionState == ConnectionState.waiting) {
-                      return Text('Loading...');
-                    }                      
-                    return Text(snapshot.data['username'],
-                        style: TextStyle(
-                          color: Theme.of(context).accentTextTheme.headline1.color ,
-                          fontWeight: FontWeight.bold,
-                        ));
-                  }
-                ),
+                Text(username,
+                    style: TextStyle(
+                      color: Theme.of(context).accentTextTheme.headline1.color,
+                      fontWeight: FontWeight.bold,
+                    )),
                 Text(
                   message,
                   style: TextStyle(
                       color: Theme.of(context).accentTextTheme.headline1.color),
-                  textAlign: isCurrentUser? TextAlign.right : TextAlign.left,
+                  textAlign: isCurrentUser ? TextAlign.right : TextAlign.left,
                 ),
               ],
             ),
