@@ -43,3 +43,18 @@ service cloud.firestore {
   }
 }
 ```
+
+## Firebase Storage rules
+
+Only authenticated user may upload (create) and read files, but deleting or modifying files is not allowed:
+
+```
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /{allPaths=**} {
+      allow read, create: if request.auth != null;
+    }
+  }
+}
+```
