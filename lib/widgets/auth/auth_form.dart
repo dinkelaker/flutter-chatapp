@@ -1,3 +1,4 @@
+import 'package:chatapp/pickers/user_image_picker.dart';
 import 'package:flutter/material.dart';
 
 class AuthForm extends StatefulWidget {
@@ -51,6 +52,7 @@ class _AuthFormState extends State<AuthForm> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
+                UserImagePicker(),
                 TextFormField(
                   key: ValueKey('email'),
                   keyboardType: TextInputType.emailAddress,
@@ -102,22 +104,23 @@ class _AuthFormState extends State<AuthForm> {
                 SizedBox(
                   height: 12,
                 ),
-                if (widget.isLoading)
-                  CircularProgressIndicator(),
-                if (!widget.isLoading) RaisedButton(
-                  child: (_isLogin) ? Text('Login') : Text('Signup'),
-                  onPressed: _trySubmit,
-                ),
-                if (!widget.isLoading) FlatButton(
-                  textColor: Theme.of(context).primaryColor,
-                  child: Text('Create new account'),
-                  onPressed: () {
-                    setState(() {
-                      // toggle from signed / login mode
-                      _isLogin = !_isLogin;
-                    });
-                  },
-                ),
+                if (widget.isLoading) CircularProgressIndicator(),
+                if (!widget.isLoading)
+                  RaisedButton(
+                    child: (_isLogin) ? Text('Login') : Text('Signup'),
+                    onPressed: _trySubmit,
+                  ),
+                if (!widget.isLoading)
+                  FlatButton(
+                    textColor: Theme.of(context).primaryColor,
+                    child: Text('Create new account'),
+                    onPressed: () {
+                      setState(() {
+                        // toggle from signed / login mode
+                        _isLogin = !_isLogin;
+                      });
+                    },
+                  ),
               ],
             ),
           ),

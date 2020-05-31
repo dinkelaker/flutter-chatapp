@@ -41,5 +41,14 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+
+		<!--permissions to use camera -->
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Access photos to use picture for avatar/string>
+	<key>NSCameraUsageDescription</key>
+	<string>Access camera to take picture for avatar</string>
+	<!--key>NSMicrophoneUsageDescription</key>
+	<string>Access microphone to record videos</string-->
+
 </dict>
 </plist>
