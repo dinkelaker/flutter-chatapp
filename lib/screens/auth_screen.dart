@@ -48,6 +48,9 @@ class _AuthScreenState extends State<AuthScreen> {
         print('User created');
       }
     } on PlatformException catch (err) {
+      setState(() {
+        _isLoading = false;
+      });
       var message = 'An error occurered.please check your credentials!';
 
       if (err.message != null) {
@@ -61,11 +64,10 @@ class _AuthScreenState extends State<AuthScreen> {
         ),
       );
     } catch (err) {
-      print(err);
-    } finally {
       setState(() {
         _isLoading = false;
       });
+      print(err);
     }
   }
 
