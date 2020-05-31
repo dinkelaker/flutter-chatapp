@@ -20,7 +20,8 @@ class _NewMessageState extends State<NewMessage> {
       'text': _enteredMessage,
       'createdAt': Timestamp.now(),
       'username': userData['username'],
-      'userId': user.uid
+      'userId': user.uid,
+      'userImage': userData['image_url'],
     });
     _controller.clear();
   }
