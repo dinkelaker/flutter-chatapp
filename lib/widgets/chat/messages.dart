@@ -11,17 +11,17 @@ class Messages extends StatelessWidget {
           .collection('chat')
           .orderBy('createdAt', descending: true)
           .snapshots(),
-      builder: (ctxt, chatsShapshot) {
-        if (chatsShapshot.connectionState == ConnectionState.waiting) {
+      builder: (ctxt, chatDocumentsShapshot) {
+        if (chatDocumentsShapshot.connectionState == ConnectionState.waiting) {
           return Center(child: CircularProgressIndicator());
         }
-        var documents = chatsShapshot.data.documents;
+        var documents = chatDocumentsShapshot.data.documents;
         if (documents.length > 0)
           return Expanded(
             child: FutureBuilder(
               future: FirebaseAuth.instance.currentUser(),
-              builder: (ctxt, futureSnapshot) {
-                if (futureSnapshot.connectionState == ConnectionState.waiting) {
+              builder: (ctxt, userDataFuture) {
+                if (userDataFuture.connectionState == ConnectionState.waiting) {
                   return Center(child: CircularProgressIndicator());
                 }
                 return ListView.builder(
@@ -29,7 +29,7 @@ class Messages extends StatelessWidget {
                   itemBuilder: (ctxt, index) => MessageBubble(
                     documents[index]['text'],
                     documents[index]['userId'],
-                    documents[index]['userId'] == futureSnapshot.data.uid,
+                    documents[index]['userId'] == userDataFuture.data.uid,
                     key: ValueKey(documents[index]['documentId']),
                   ),
                   reverse: true,
