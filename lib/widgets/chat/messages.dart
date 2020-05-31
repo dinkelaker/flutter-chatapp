@@ -6,39 +6,39 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class Messages extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
-      stream: Firestore.instance
-          .collection('chat')
-          .orderBy('createdAt', descending: true)
-          .snapshots(),
-      builder: (ctxt, chatDocumentsShapshot) {
-        if (chatDocumentsShapshot.connectionState == ConnectionState.waiting) {
+    return FutureBuilder(
+      future: FirebaseAuth.instance.currentUser(),
+      builder: (ctxt, userDataFuture) {
+        if (userDataFuture.connectionState == ConnectionState.waiting) {
           return Center(child: CircularProgressIndicator());
         }
-        var documents = chatDocumentsShapshot.data.documents;
-        if (documents.length > 0)
-          return Expanded(
-            child: FutureBuilder(
-              future: FirebaseAuth.instance.currentUser(),
-              builder: (ctxt, userDataFuture) {
-                if (userDataFuture.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
-                }
-                return ListView.builder(
-                  itemCount: documents.length,
-                  itemBuilder: (ctxt, index) => MessageBubble(
-                    documents[index]['text'],
-                    documents[index]['userId'],
-                    documents[index]['userId'] == userDataFuture.data.uid,
-                    key: ValueKey(documents[index]['documentId']),
-                  ),
-                  reverse: true,
-                );
-              },
-            ),
-          );
-        else
-          return Text('No messages, yet!');
+        return StreamBuilder(
+          stream: Firestore.instance
+              .collection('chat')
+              .orderBy('createdAt', descending: true)
+              .snapshots(),
+          builder: (ctxt, chatDocumentsShapshot) {
+            if (chatDocumentsShapshot.connectionState ==
+                ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator());
+            }
+            var documents = chatDocumentsShapshot.data.documents;
+            if (documents.length > 0)
+              return Expanded(
+                  child: ListView.builder(
+                itemCount: documents.length,
+                itemBuilder: (ctxt, index) => MessageBubble(
+                  documents[index]['text'],
+                  documents[index]['userId'],
+                  documents[index]['userId'] == userDataFuture.data.uid,
+                  key: ValueKey(documents[index]['documentId']),
+                ),
+                reverse: true,
+              ));
+            else
+              return Text('No messages, yet!');
+          },
+        );
       },
     );
   }
