@@ -4,4 +4,12 @@
          to allow setting breakpoints, to provide hot reload, etc.
     -->
     <uses-permission android:name="android.permission.INTERNET"/>
+
+    <activity>
+        <!-- Enable clicking on a push notification opens the app -->
+        <intent-filter>
+        <action android:name="FLUTTER_NOTIFICATION_CLICK" />
+        <category android:name="android.intent.category.DEFAULT" />
+        </intent-filter>
+    </activity>
 </manifest>
