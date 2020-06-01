@@ -1,11 +1,39 @@
-import 'package:chatapp/widgets/chat/messages.dart';
-import 'package:chatapp/widgets/chat/new_message.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
-class ChatScreen extends StatelessWidget {
+import '../widgets/chat/messages.dart';
+import '../widgets/chat/new_message.dart';
+
+class ChatScreen extends StatefulWidget {
+  @override
+  _ChatScreenState createState() => _ChatScreenState();
+}
+
+class _ChatScreenState extends State<ChatScreen> {
+  @override
+  void initState() {
+    final fbm = FirebaseMessaging();
+    fbm.requestNotificationPermissions();
+    fbm.configure(
+      onMessage: (msg) {
+        print('MESSAGE: '+msg.toString());
+        return;
+      },
+      onLaunch: (msg) {
+        print('LAUNCH: '+ msg.toString());
+        return;
+      },
+      onResume: (msg) {
+        print('RESUME: '+ msg.toString());
+        return;
+      },
+    );
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,9 +70,7 @@ class ChatScreen extends StatelessWidget {
         ],
       ),
       body: StreamBuilder(
-        stream: Firestore.instance
-            .collection('chat')
-            .snapshots(),
+        stream: Firestore.instance.collection('chat').snapshots(),
         builder: (ctxt, streamSnapshot) {
           if (streamSnapshot.connectionState == ConnectionState.waiting) {
             return Center(
@@ -53,10 +79,7 @@ class ChatScreen extends StatelessWidget {
           }
           return Container(
             child: Column(
-              children: <Widget>[
-                Messages(),
-                NewMessage()
-              ],
+              children: <Widget>[Messages(), NewMessage()],
             ),
           );
         },
