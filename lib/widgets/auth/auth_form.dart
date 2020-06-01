@@ -74,6 +74,8 @@ class _AuthFormState extends State<AuthForm> {
                 UserImagePicker(_pickedImage),
                 TextFormField(
                   key: ValueKey('email'),
+                  autocorrect: false,
+                  textCapitalization: TextCapitalization.none,
                   keyboardType: TextInputType.emailAddress,
                   decoration: InputDecoration(
                     labelText: 'Email address',
@@ -91,6 +93,9 @@ class _AuthFormState extends State<AuthForm> {
                 if (!_isLogin)
                   TextFormField(
                     key: ValueKey('username'),
+                    autocorrect: true,
+                    textCapitalization: TextCapitalization.words,
+                    enableSuggestions: false,
                     decoration: InputDecoration(
                       labelText: 'Username',
                     ),
@@ -132,7 +137,7 @@ class _AuthFormState extends State<AuthForm> {
                 if (!widget.isLoading)
                   FlatButton(
                     textColor: Theme.of(context).primaryColor,
-                    child: Text('Create new account'),
+                    child: (_isLogin) ? Text('Create new account') : Text('I already have an account') ,
                     onPressed: () {
                       setState(() {
                         // toggle from signed / login mode
